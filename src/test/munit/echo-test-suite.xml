@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="echo-test-suite.xml" />
+	<munit:test name="echo-test-suite-get:\customers\(customerName):echo-configTest" doc:id="c9750b06-5d4a-4ae3-8c69-e6552b01c31d" description="Test">
+		<munit:execution >
+		<munit:set-event cloneOriginalEvent="false">
+		  <munit:attributes value="#[{ uriParams : { customerName : 'mukesh'}}]" />
+		</munit:set-event>
+			<flow-ref doc:name="Flow-ref to get:\customers\(customerName):echo-config" doc:id="ed852134-8c2b-417a-81d6-9d08544ce301" name="get:\customers\(customerName):echo-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="2ab39de2-d27b-4268-bbe3-a4407c7a23cc" actual="#[payload.message]" expected="#['mukesh is a valid customer']" message="Test passed"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="echo-test-suite-get:\customers\(customerName):echo-configTest-exception" doc:id="c167498e-a612-4887-8a0c-2856cec31a1a" description="Test" expectedErrorType="MYERROR:NOT_FOUND">
+		<munit:execution >
+		<munit:set-event cloneOriginalEvent="false">
+		  <munit:attributes value="#[{ uriParams : { customerName : 'someoneelse'}}]" />
+		</munit:set-event>
+			<flow-ref doc:name="Flow-ref to get:\customers\(customerName):echo-config" doc:id="20eaeaec-9015-42fd-b1b8-b85bd42ef764" name="get:\customers\(customerName):echo-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="83d2ce8c-71ec-4941-a3c0-cd293ff66402" actual="#[payload.message]" expected="#['someoneelse is a valid customer']" message="Test passed"/>
+		</munit:validation>
+	</munit:test>
+</mule>

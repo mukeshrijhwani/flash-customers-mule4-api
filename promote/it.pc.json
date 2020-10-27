@@ -1,0 +1,87 @@
+{
+	"info": {
+		"_postman_id": "9bc943b3-c51f-4efc-802f-6f6a54e91cff",
+		"name": "CloudhubAPIsIntegrationTests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GetCustomersHappyPath",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "50dc5b54-13ac-4466-ad63-3fc07220715a",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Get Customer\", function() {",
+							"  pm.response.to.have.status(200);",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://{{targetApplicationName}}.us-e1.cloudhub.io/api/customers/mukesh",
+					"protocol": "http",
+					"host": [
+						"{{targetApplicationName}}",
+						"us-e1",
+						"cloudhub",
+						"io"
+					],
+					"path": [
+						"api",
+						"customers",
+						"mukesh"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetCustomersUnhappyPath",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ed619c82-4258-4bfb-8a8e-92998a1499ec",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Get Customer\", function() {",
+							"  pm.response.to.have.status(404);",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://{{targetApplicationName}}.us-e1.cloudhub.io/api/customers/dukesh",
+					"protocol": "http",
+					"host": [
+						"{{targetApplicationName}}",
+						"us-e1",
+						"cloudhub",
+						"io"
+					],
+					"path": [
+						"api",
+						"customers",
+						"dukesh"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

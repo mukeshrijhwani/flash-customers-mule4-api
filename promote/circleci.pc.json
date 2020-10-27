@@ -1,0 +1,76 @@
+{
+	"info": {
+		"_postman_id": "cba5b0e8-1c7d-4f10-9f22-3cb5eb29f2e4",
+		"name": "circleci.pc",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Set Environment Variables",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "9390e594-c52a-444c-986f-3e4b1b2f8b9a",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "df3f7826-12c4-4c28-9a0a-e36dfbfbfd5b",
+						"exec": [
+							"pm.test(\"Set Env Variable\", function() {",
+							"  pm.response.to.have.status(201);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"{{name}}\",\n    \"value\": \"{{value}}\"\n}"
+				},
+				"url": {
+					"raw": "https://circleci.com/api/v1.1/project/{{git_type}}/{{git_user}}/{{git_project}}/envvar?circle-token={{circleci_token}}",
+					"protocol": "https",
+					"host": [
+						"circleci",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1.1",
+						"project",
+						"{{git_type}}",
+						"{{git_user}}",
+						"{{git_project}}",
+						"envvar"
+					],
+					"query": [
+						{
+							"key": "circle-token",
+							"value": "{{circleci_token}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

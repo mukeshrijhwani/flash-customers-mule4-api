@@ -1,0 +1,18 @@
+#%RAML 1.0
+version: v1
+title: Echo
+baseUri: http://anypoint.mulesoft.com/
+/customers:
+  /{customerName}:
+    get:
+      responses:
+        200:
+          body:
+            application/json:
+              example:
+                message: mukesh is a valid customer
+        404:
+          body:
+            application/json:
+              example: 
+                message: someone is not a valid customer          

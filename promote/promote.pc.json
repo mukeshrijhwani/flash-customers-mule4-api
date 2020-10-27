@@ -1,0 +1,407 @@
+{
+	"info": {
+		"_postman_id": "56740142-a5b1-4dc0-acab-aa1350c77da1",
+		"name": "CloudhubAPIs CICD",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GetBearerToken",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "45cdd830-b1fd-41aa-9bb4-69127b0095f6",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Get Token\", function() {",
+							"  var jsonData = pm.response.json();",
+							"  pm.globals.set('token', jsonData.access_token);",
+							"  console.log('Token: ' + pm.globals.get('token'));",
+							"});",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ae9ee853-2946-4533-9e18-3a88c9058d3c",
+						"type": "text/javascript",
+						"exec": [
+							"console.log('::::' + pm.environment.get('ANYPOINT_USERNAME'));",
+							"console.log('::::' + pm.globals.get('ANYPOINT_USERNAME'));",
+							"console.log('::::' + pm.variables.get('ANYPOINT_USERNAME'));",
+							"/*",
+							"pm.environment.set('sourceEnvironmentName', pm.environment.get('SOURCE_ENVRIONMENT'));",
+							"pm.environment.set('targetEnvironmentName', pm.environment.get('TARGET_ENVRIONMENT'));",
+							"pm.environment.set('sourceApplicationName',pm.environment.get('SOURCE_APPLICATION_NAME'));",
+							"pm.environment.set('targetApplicationName',pm.environment.get('TARGET_APPLICATION_NAME'));",
+							"*/"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "{{ANYPOINT_USERNAME}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "{{ANYPOINT_PASSWORD}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://anypoint.mulesoft.com/accounts/login",
+					"protocol": "https",
+					"host": [
+						"anypoint",
+						"mulesoft",
+						"com"
+					],
+					"path": [
+						"accounts",
+						"login"
+					]
+				},
+				"description": "GetBearerToken"
+			},
+			"response": []
+		},
+		{
+			"name": "GetOrganizationId",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "3626304d-9bce-4c9d-9e44-73414fa4c4ce",
+						"type": "text/javascript",
+						"exec": [
+							"//pm.globals.set('token', '2a0354d9-8b6b-47d2-b11d-81973b13a1c9');"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "e9440ee0-31cf-4371-82a2-d6935838fd0c",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Get organizationId\", function() {",
+							"  var jsonData = pm.response.json();",
+							"  pm.globals.set('organizationId', jsonData.user.organizationId);",
+							"  console.log('organizationId: ' + pm.globals.get('organizationId'));",
+							"});",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://anypoint.mulesoft.com/accounts/api/me",
+					"protocol": "https",
+					"host": [
+						"anypoint",
+						"mulesoft",
+						"com"
+					],
+					"path": [
+						"accounts",
+						"api",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetEnvironments",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6c44d5f8-927f-42c5-b4c7-e69679fca970",
+						"type": "text/javascript",
+						"exec": [
+							"//pm.globals.set('token', '2a0354d9-8b6b-47d2-b11d-81973b13a1c9');"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "f9818275-ba1e-4f9e-b1f1-cd9e23fed701",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Get Environments\", function() {",
+							"  var jsonData = pm.response.json();",
+							"  console.log(\"Response to Get Envrionments: \" + jsonData.length);",
+							"  for (var i = 0; i < jsonData.length; i++) {",
+							"    var envName = jsonData[i].name;",
+							"   ",
+							"    console.log(\"Env: \" + pm.variables.get('sourceEnvironmentName') + \",\" + envName);",
+							"    console.log(\"Env: \" + pm.variables.get('targetEnvironmentName') + \",\" + envName);",
+							"",
+							"   // if (envName == pm.globals.get('sourceEnvironmentName')){",
+							"    if (envName == pm.variables.get('sourceEnvironmentName')){",
+							"         pm.globals.set('sourceEnvironmentId', jsonData[i].id);",
+							"         console.log(\"sourceEnvironmentId: \" + pm.globals.get('sourceEnvironmentId'));",
+							"    }",
+							"    //if (envName == pm.globals.get('targetEnvironmentName')){",
+							"    if (envName == pm.variables.get('targetEnvironmentName')){",
+							"         pm.globals.set('targetEnvironmentId', jsonData[i].id);",
+							"         console.log(\"targetEnvironmentId: \" + pm.globals.get('targetEnvironmentId'));",
+							"    }",
+							"  }   ",
+							"});",
+							"",
+							"",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"disabled": true
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://anypoint.mulesoft.com/apiplatform/repository/v2/organizations/{{organizationId}}/environments",
+					"protocol": "https",
+					"host": [
+						"anypoint",
+						"mulesoft",
+						"com"
+					],
+					"path": [
+						"apiplatform",
+						"repository",
+						"v2",
+						"organizations",
+						"{{organizationId}}",
+						"environments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetSourceApplicationInfo",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ac686d05-e8b0-4877-ace9-e5c63c692828",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "fde9ba24-d8db-4580-9bf5-a213d866e610",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Get ApplicationInfo\", function() {",
+							"  var jsonData = pm.response.json();",
+							"",
+							"  pm.globals.set('sourceApplicationId', jsonData.applicationId);",
+							"  console.log(\"sourceApplicationId: \" + pm.globals.get('sourceApplicationId'));",
+							"",
+							"  pm.globals.set('sourceFileName', jsonData.fileName);",
+							"  console.log(\"sourceFileName: \" + pm.globals.get('sourceFileName'));",
+							"",
+							"  pm.globals.set('sourceFileHash', jsonData.fileHash);",
+							"  console.log(\"sourceFileHash: \" + pm.globals.get('sourceFileHash'));",
+							"});",
+							"",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-ANYPNT-ORG-ID",
+						"value": "{{organizationId}}"
+					},
+					{
+						"key": "X-ANYPNT-ENV-ID",
+						"value": "{{targetEnvironmentId}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://anypoint.mulesoft.com/cloudhub/api/environments/{{sourceEnvironmentId}}/applications/{{sourceApplicationName}}/",
+					"protocol": "https",
+					"host": [
+						"anypoint",
+						"mulesoft",
+						"com"
+					],
+					"path": [
+						"cloudhub",
+						"api",
+						"environments",
+						"{{sourceEnvironmentId}}",
+						"applications",
+						"{{sourceApplicationName}}",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PromoteApplication",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "4e5ec6d7-979b-470b-8c76-b7e0366ee599",
+						"type": "text/javascript",
+						"exec": [
+							"//pm.globals.set('token', 'b1d2973f-0824-4b6d-bd07-7bf4354bb602');",
+							"//pm.globals.set('X-ANYPNT-ORG-ID', '9fb55a31-11b5-4c2d-aeee-aec94c94a5e0');",
+							"//pm.globals.set('X-ANYPNT-ENV-ID', '6268571a-57cb-4a74-a8b8-a3181380965b');",
+							"",
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "ce55b3e5-7f73-4f93-a920-feee57e6ee30",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Promote Application\", function() {",
+							"  pm.response.to.have.status(200);",
+							"/*  var jsonData = pm.response.json();",
+							"  for (var i = 0; i < jsonData.data.length; i++) {",
+							"    var applicationName = jsonData.data[i].domain;",
+							"    if (applicationName == 'aesop-poller-test'){",
+							"         console.log(\"ApplicationId: \" + jsonData.data[i].id);",
+							"         pm.globals.set('applicationId', jsonData.data[i].id);",
+							"    }",
+							"  }*/  ",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "X-ANYPNT-ORG-ID",
+						"value": "{{organizationId}}"
+					},
+					{
+						"key": "X-ANYPNT-ENV-ID",
+						"value": "{{targetEnvironmentId}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"applicationSource\": {\n        \"source\": \"SANDBOX\",\n        \"fileSource\": \"{{sourceApplicationId}}\", \n        \"fileChecksum\": \"{{sourceFileHash}}\"\n    },\n    \"applicationInfo\": {\n        \"propertiesOptions\": {},\n        \"fileName\": \"{{sourceFileName}}\"\n    }\n}"
+				},
+				"url": {
+					"raw": "https://anypoint.mulesoft.com/cloudhub/api/v2/applications/{{targetApplicationName}}",
+					"protocol": "https",
+					"host": [
+						"anypoint",
+						"mulesoft",
+						"com"
+					],
+					"path": [
+						"cloudhub",
+						"api",
+						"v2",
+						"applications",
+						"{{targetApplicationName}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
