@@ -38,7 +38,7 @@ jobs:
           key: v1-dependencies-{{ checksum "pom.xml" }}
         
       # run tests!
-      - run: mvn clean package deploy  --settings settings.xml
+      - run: mvn clean package deploy -DskipTests=true deploy --settings settings.xml
 
 #- run: mvn clean package -DskipTests=true deploy com.bazaarvoice.maven.plugins:s3-upload-maven-plugin:1.2:s3-upload  --settings settings.xml
   promote:
