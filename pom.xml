@@ -36,7 +36,7 @@
 						<muleVersion>4.3.0</muleVersion>
 						<username>${ANYPOINT_USERNAME}</username>
 						<password>${ANYPOINT_PASSWORD}</password>
-						<redeploy>true</redeploy>
+						
 						<applicationName>${ANYPOINT_APPLICATION_NAME}</applicationName>
 						<environment>${ANYPOINT_ENVIRONMENT}</environment>
 						<workerType>Micro</workerType>
